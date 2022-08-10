@@ -1,6 +1,4 @@
-# syntax = edrevo/dockerfile-plus
-
-INCLUDE+ Dockerfile
+FROM fusionauth/fusionauth-app:1.30.2
 
 ###### Grant Execution Permission ###################################
 
