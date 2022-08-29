@@ -1,4 +1,4 @@
-FROM fusionauth/fusionauth-app:1.30.2
+FROM fusionauth/fusionauth-app:1.38.1
 
 ###### Grant Execution Permission ###################################
 

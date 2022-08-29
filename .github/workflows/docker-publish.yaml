@@ -3,8 +3,8 @@ on:
   push:
     branches:
       - 1.38.1.os
-    paths:
-      - 'docker/fusionauth/release-trigger'
+    # paths:
+    #   - 'docker/fusionauth/release-trigger'
 concurrency: docker-concurrency-group
 jobs:
   multiarch-build:
