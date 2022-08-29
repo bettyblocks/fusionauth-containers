@@ -2,7 +2,7 @@ name: Publish Docker
 on:
   push:
     branches:
-      - master
+      - 1.38.1.os
     paths:
       - 'docker/fusionauth/release-trigger'
 concurrency: docker-concurrency-group
@@ -23,18 +23,21 @@ jobs:
       -
         name: Build version tag
         run: |
-          echo "FUSIONAUTH_TAGS=fusionauth/fusionauth-app:${{ env.FUSIONAUTH_VERSION }}${{ env.FUSIONAUTH_TAG_SUFFIX }}" >> $GITHUB_ENV
+          echo "FUSIONAUTH_TAGS=stephankaag/fusionauth-app:${{ env.FUSIONAUTH_VERSION }}${{ env.FUSIONAUTH_TAG_SUFFIX }}" >> $GITHUB_ENV
+          echo "FUSIONAUTH_MYSQL_TAGS=stephankaag/fusionauth-app-mysql:${{ env.FUSIONAUTH_VERSION }}${{ env.FUSIONAUTH_TAG_SUFFIX }}" >> $GITHUB_ENV
       -
         name: Optional :latest tag
         if: ${{ env.FUSIONAUTH_PRE_RELEASE == 'false' }}
         run: |
-          echo "FUSIONAUTH_TAGS=${{ env.FUSIONAUTH_TAGS }},fusionauth/fusionauth-app:latest${{ env.FUSIONAUTH_TAG_SUFFIX }}" >> $GITHUB_ENV
+          echo "FUSIONAUTH_TAGS=${{ env.FUSIONAUTH_TAGS }},stephankaag/fusionauth-app:latest${{ env.FUSIONAUTH_TAG_SUFFIX }}" >> $GITHUB_ENV
+          echo "FUSIONAUTH_MYSQL_TAGS=${{ env.FUSIONAUTH_MYSQL_TAGS }},stephankaag/fusionauth-app-mysql:latest${{ env.FUSIONAUTH_TAG_SUFFIX }}" >> $GITHUB_ENV
       -
         name: Job summary
         run: | 
           echo "Version: ${{ env.FUSIONAUTH_VERSION }}"
           echo "PreRelease: ${{ env.FUSIONAUTH_PRE_RELEASE }}"
           echo "Tags: ${{ env.FUSIONAUTH_TAGS }}"
+          echo "Tags: ${{ env.FUSIONAUTH_MYSQL_TAGS }}"
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -58,4 +61,23 @@ jobs:
           platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/ppc64le,linux/s390x
           push: true
           tags: ${{ env.FUSIONAUTH_TAGS }}
-
+      -
+        name: Build and push fusionauth-app
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./docker/fusionauth/fusionauth-app/Dockerfile.openshift
+          build-args: FUSIONAUTH_VERSION=${{ env.FUSIONAUTH_VERSION }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/ppc64le,linux/s390x
+          push: true
+          tags: ${{ env.FUSIONAUTH_MYSQL_TAGS }}
+      -
+        name: Build and push fusionauth-app-mysql
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./docker/fusionauth/fusionauth-app-mysql/Dockerfile.openshift
+          build-args: FUSIONAUTH_VERSION=${{ env.FUSIONAUTH_VERSION }}
+          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/ppc64le,linux/s390x
+          push: true
+          tags: ${{ env.FUSIONAUTH_MYSQL_TAGS }}
