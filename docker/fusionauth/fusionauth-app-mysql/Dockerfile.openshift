@@ -61,4 +61,4 @@ RUN chmod 755 /run.sh
 
 USER fusionauth
 
-CMD ["/run.sh]
+CMD ["/run.sh"]
