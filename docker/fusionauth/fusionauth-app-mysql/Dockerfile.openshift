@@ -59,9 +59,9 @@ RUN mkdir -p /usr/local/fusionauth/logs \
 COPY run.sh /run.sh
 RUN chmod 755 /run.sh
 
-RUN ["mv", "/opt/openjdk/lib/security/cacerts", "/tmp/cacerts"]
-RUN ["ln", "-s", "/tmp/cacerts", "/opt/openjdk/lib/security/cacerts"]
-RUN ["chown", "fusionauth:root", "/tmp/cacerts"]
+RUN mv /opt/openjdk/lib/security/cacerts /tmp/cacerts
+RUN ln -s /tmp/cacerts /opt/openjdk/lib/security/cacerts
+RUN chmod 777 /tmp/cacerts
 
 USER fusionauth
 
