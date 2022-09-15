@@ -56,9 +56,9 @@ RUN mkdir -p /usr/local/fusionauth/logs \
 
 ###### Change back to fusionauth user ###############################
 
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod 755 /entrypoint.sh
+COPY run.sh /run.sh
+RUN chmod 755 /run.sh
 
 USER fusionauth
 
-ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/run.sh]
