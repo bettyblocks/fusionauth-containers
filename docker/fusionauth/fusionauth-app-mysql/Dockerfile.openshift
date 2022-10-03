@@ -56,4 +56,13 @@ RUN mkdir -p /usr/local/fusionauth/logs \
 
 ###### Change back to fusionauth user ###############################
 
+COPY run.sh /run.sh
+RUN chmod 755 /run.sh
+
+RUN mv /opt/openjdk/lib/security/cacerts /tmp/cacerts
+RUN ln -s /tmp/cacerts /opt/openjdk/lib/security/cacerts
+RUN chmod 777 /tmp/cacerts
+
 USER fusionauth
+
+CMD ["/run.sh"]
